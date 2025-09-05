@@ -1,0 +1,18 @@
+# Whether to debug for information
+tinyDebug: false
+# Where a profile name is randomly chosen.
+profileNames: []
+# The default unlocked profile slots
+defaultSlots: 2
+# Whether to translate items when joining
+translateOnJoin: false
+welcomePlayers:
+  # Whether we should welcome players.
+  enabled: true
+  # The BlobMessage that's sent when a player joins for the first time.
+  message: System.Welcome
+  inventory:
+    # If enabled, will give "WelcomeInventory" BlobInventory to players when joined for the first time.
+    enabled: false
+    # If inventory should be treated as soul, which means that it's not lost on death
+    soul: false
