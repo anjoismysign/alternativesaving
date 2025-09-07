@@ -51,7 +51,7 @@ public class AlternativeSavingManager extends SavingManager {
                         if (joined == null){
                             return;
                         }
-                        if (serialPlayer.hasPlayedBefore()){
+                        if (serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile()).hasPlayedBefore()){
                             serialPlayer.loadProfile(joined, serialPlayer.getSelectedProfile());
                             boolean translateOnJoin = savingConfiguration.isTranslateOnJoin();
                             if (translateOnJoin){
@@ -97,7 +97,7 @@ public class AlternativeSavingManager extends SavingManager {
                     if (player == null){
                         return;
                     }
-                    serialPlayer.saveCurrentProfile(player, serialPlayer.hasPlayedBefore());
+                    serialPlayer.saveCurrentProfile(player, serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile()).hasPlayedBefore());
                 })
                 .onQuit(serialPlayer -> {
                     @Nullable Player player = serialPlayer.getPlayer();
