@@ -28,11 +28,6 @@ public final class SerialPlayer implements Crudable {
         }
     }
 
-    public SerialPlayer(@NotNull String identification, @NotNull List<SerialProfile> profiles) {
-        this.identification = identification;
-        this.profiles = profiles;
-    }
-
     @Override
     public @NotNull String getIdentification() {
         return identification;
