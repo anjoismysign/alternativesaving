@@ -1,5 +1,6 @@
 package io.github.anjoismysign.alternativesaving.entity;
 
+import io.github.anjoismysign.alternativesaving.AlternativeSaving;
 import io.github.anjoismysign.alternativesaving.configuration.SavingConfiguration;
 import io.github.anjoismysign.alternativesaving.director.manager.ConfigurationManager;
 import io.github.anjoismysign.psa.crud.Crudable;
@@ -62,10 +63,9 @@ public final class SerialPlayer implements Crudable {
 
     public void loadProfile(@NotNull Player player,
                             int selectedProfile){
+        AlternativeSaving plugin = AlternativeSaving.getInstance();
         if (this.selectedProfile != selectedProfile) {
             saveCurrentProfile(player, true);
-        } else {
-            return;
         }
         int size = profiles.size();
         if (size <= selectedProfile){
@@ -74,6 +74,7 @@ public final class SerialPlayer implements Crudable {
         SerialProfile profile = profiles.get(selectedProfile);
         String json = profile.json;
         if (json == null || json.isEmpty()){
+            plugin.info("empty json");
             profile.json = PlayerProfile.fromPlayer(player, false).toJson();
         } else {
             PlayerProfile.fromJson(json).toPlayer(player);

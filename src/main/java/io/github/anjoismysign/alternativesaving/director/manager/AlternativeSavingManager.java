@@ -23,8 +23,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.logging.Logger;
 
 public class AlternativeSavingManager extends SavingManager {
+
     private final String reference = "AlternativeSavingWelcomeInventory";
     private final BukkitCruder<SerialPlayer> serialPlayerCruder;
 
@@ -45,6 +47,8 @@ public class AlternativeSavingManager extends SavingManager {
                 .crudableClass(SerialPlayer.class)
                 .plugin(plugin)
                 .onJoin(serialPlayer -> {
+                    @Nullable Player player = serialPlayer.getPlayer();
+                    String identification = player == null ? serialPlayer.getIdentification() : player.getName();
                     Bukkit.getScheduler().runTask(plugin, () -> {
                         SavingConfiguration savingConfiguration = ConfigurationManager.getConfiguration();
                         @Nullable Player joined = serialPlayer.getPlayer();
@@ -52,6 +56,7 @@ public class AlternativeSavingManager extends SavingManager {
                             return;
                         }
                         if (serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile()).hasPlayedBefore()){
+                            AlternativeSaving.getInstance().info(identification+" hasPlayedBefore");
                             serialPlayer.loadProfile(joined, serialPlayer.getSelectedProfile());
                             boolean translateOnJoin = savingConfiguration.isTranslateOnJoin();
                             if (translateOnJoin){
@@ -68,6 +73,7 @@ public class AlternativeSavingManager extends SavingManager {
                             }
                             return;
                         }
+                        AlternativeSaving.getInstance().info(identification+" isNewPlayer");
                         WelcomePlayersConfiguration welcomePlayers = savingConfiguration.getWelcomePlayers();
                         if (welcomePlayers.isEnabled()) {
                             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
@@ -104,6 +110,8 @@ public class AlternativeSavingManager extends SavingManager {
                     if (player == null){
                         return;
                     }
+                    int selectedProfile = serialPlayer.getSelectedProfile();
+                    AlternativeSaving.getInstance().info(player.getName()+"'s selectedProfile: "+selectedProfile);
                     serialPlayer.saveCurrentProfile(player, true);
                 })
                 .build();
