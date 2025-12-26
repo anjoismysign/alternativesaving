@@ -5,6 +5,8 @@ api-version: 1.21
 load: POSTWORLD
 depend:
   - BlobLib
+softdepend:
+  - BlobEconomy
 authors: [ anjoismysign ]
 commands:
   alternativesaving:

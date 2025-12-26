@@ -3,6 +3,8 @@ package io.github.anjoismysign.alternativesaving.entity;
 import io.github.anjoismysign.alternativesaving.AlternativeSaving;
 import io.github.anjoismysign.alternativesaving.configuration.SavingConfiguration;
 import io.github.anjoismysign.alternativesaving.director.manager.ConfigurationManager;
+import io.github.anjoismysign.bloblib.api.BlobLibInventoryAPI;
+import io.github.anjoismysign.bloblib.entities.translatable.TranslatableItem;
 import io.github.anjoismysign.psa.crud.Crudable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
@@ -86,5 +88,39 @@ public final class SerialPlayer implements Crudable {
     public Player getPlayer(){
         UUID uuid = UUID.fromString(getIdentification());
         return Bukkit.getPlayer(uuid);
+    }
+
+    public void openProfileSwitch(){
+        @Nullable Player target = getPlayer();
+        if (target == null){
+            return;
+        }
+        BlobLibInventoryAPI.getInstance()
+                .customSelector(
+                        "AlternativeSavingSwitchProfile",
+                        target,
+                        "Profiles",
+                        "Profile",
+                        ()->profiles,
+                        profile -> {
+                            target.closeInventory();
+                            int index = profiles.indexOf(profile);
+                            if (index == -1){
+                                throw new RuntimeException("Profile does not belong to SerialPlayer");
+                            }
+                            if (index == selectedProfile){
+                                return;
+                            }
+                            loadProfile(target, index);
+                        },
+                        profile -> TranslatableItem.by("AlternativeSaving.Switch-Profile-Element")
+                                .localize(target)
+                                .modder()
+                                .replace("%profile%", profile.getProfileName())
+                                .get()
+                                .get(),
+                        null,
+                        null,
+                        null);
     }
 }

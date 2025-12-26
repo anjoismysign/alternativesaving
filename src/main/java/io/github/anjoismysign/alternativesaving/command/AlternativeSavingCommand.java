@@ -3,10 +3,7 @@ package io.github.anjoismysign.alternativesaving.command;
 import io.github.anjoismysign.alternativesaving.AlternativeSaving;
 import io.github.anjoismysign.alternativesaving.director.manager.AlternativeSavingManager;
 import io.github.anjoismysign.alternativesaving.entity.SerialPlayer;
-import io.github.anjoismysign.alternativesaving.entity.SerialProfile;
-import io.github.anjoismysign.bloblib.api.BlobLibInventoryAPI;
 import io.github.anjoismysign.bloblib.api.BlobLibMessageAPI;
-import io.github.anjoismysign.bloblib.entities.translatable.TranslatableItem;
 import io.github.anjoismysign.skeramidcommands.command.Command;
 import io.github.anjoismysign.skeramidcommands.command.CommandBuilder;
 import io.github.anjoismysign.skeramidcommands.commandtarget.BukkitCommandTarget;
@@ -15,9 +12,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.jetbrains.annotations.Nullable;
-
-import java.util.List;
-import java.util.UUID;
 
 public enum AlternativeSavingCommand {
     INSTANCE;
@@ -46,36 +40,11 @@ public enum AlternativeSavingCommand {
                     .handle(target);
                 return;
             }
-            UUID uuid = target.getUniqueId();
             Bukkit.getScheduler().runTask(AlternativeSaving.getInstance(), () -> {
-                if (target != Bukkit.getPlayer(uuid)) {
+                if (!target.isConnected()) {
                     return;
                 }
-                List<SerialProfile> profiles = serialPlayer.getProfiles();
-                BlobLibInventoryAPI.getInstance()
-                        .customSelector(
-                                "AlternativeSavingSwitchProfile",
-                                target,
-                                "Profiles",
-                                "Profile",
-                                ()->profiles,
-                                profile -> {
-                                    target.closeInventory();
-                                    int index = profiles.indexOf(profile);
-                                    if (index == -1){
-                                        throw new RuntimeException("Profile does not belong to SerialPlayer");
-                                    }
-                                    serialPlayer.loadProfile(target, index);
-                                },
-                                profile -> TranslatableItem.by("AlternativeSaving.Switch-Profile-Element")
-                                        .localize(target)
-                                        .modder()
-                                        .replace("%profile%", profile.getProfileName())
-                                        .get()
-                                        .get(),
-                                null,
-                                null,
-                                null);
+                serialPlayer.openProfileSwitch();
             });
         });
     }

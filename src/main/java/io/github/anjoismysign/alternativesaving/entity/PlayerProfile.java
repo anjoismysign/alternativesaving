@@ -1,6 +1,9 @@
 package io.github.anjoismysign.alternativesaving.entity;
 
 import com.google.gson.Gson;
+import io.github.anjoismysign.alternativesaving.blobeconomy.BlobEconomy;
+import io.github.anjoismysign.alternativesaving.blobeconomy.Found;
+import io.github.anjoismysign.alternativesaving.blobeconomy.NotFound;
 import io.github.anjoismysign.bloblib.utilities.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
@@ -11,6 +14,8 @@ import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.jetbrains.annotations.NotNull;
+
+import java.util.Map;
 
 public record PlayerProfile(
         double getHealth,
@@ -32,7 +37,9 @@ public record PlayerProfile(
         @NotNull String getInventory,
         @NotNull String getArmor,
         int getHeldItemSlot,
-        boolean hasPlayedBefore
+        boolean hasPlayedBefore,
+        @NotNull Map<String, Double> wallet,
+        @NotNull Map<String, Double> bank
 ) {
 
     public static PlayerProfile fromPlayer(@NotNull Player player,
@@ -44,6 +51,12 @@ public record PlayerProfile(
                 + "," + location.getZ()
                 + "," + location.getYaw()
                 + "," + location.getPitch();
+        BlobEconomy economy;
+        if (Bukkit.getPluginManager().isPluginEnabled("BlobEconomy")) {
+            economy = new Found();
+        } else {
+            economy = new NotFound();
+        }
 
         return new PlayerProfile(
                 player.getHealth(),
@@ -65,7 +78,9 @@ public record PlayerProfile(
                 ItemStackUtil.itemStackArrayToBase64(player.getInventory().getContents()),
                 ItemStackUtil.itemStackArrayToBase64(player.getInventory().getArmorContents()),
                 player.getInventory().getHeldItemSlot(),
-                hasPlayedBefore
+                hasPlayedBefore,
+                economy.wallet(player),
+                economy.bank(player)
         );
     }
 
@@ -74,6 +89,13 @@ public record PlayerProfile(
     }
 
     public void toPlayer(@NotNull Player player) {
+        BlobEconomy economy;
+        if (Bukkit.getPluginManager().isPluginEnabled("BlobEconomy")) {
+            economy = new Found();
+        } else {
+            economy = new NotFound();
+        }
+
         player.setHealth(this.getHealth);
         AttributeInstance maxHealthInstance = player.getAttribute(Attribute.MAX_HEALTH);
         if (maxHealthInstance != null) {
@@ -114,6 +136,9 @@ public record PlayerProfile(
         player.getInventory().setContents(contents);
         player.getInventory().setArmorContents(armor);
         player.getInventory().setHeldItemSlot(this.getHeldItemSlot);
+
+        economy.applyWallet(player, wallet);
+        economy.applyBank(player, bank);
 
     }
 
