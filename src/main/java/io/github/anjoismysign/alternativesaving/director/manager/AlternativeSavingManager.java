@@ -7,6 +7,8 @@ import io.github.anjoismysign.alternativesaving.configuration.WelcomePlayersConf
 import io.github.anjoismysign.alternativesaving.director.SavingManager;
 import io.github.anjoismysign.alternativesaving.director.SavingManagerDirector;
 import io.github.anjoismysign.alternativesaving.entity.SerialPlayer;
+import io.github.anjoismysign.alternativesaving.event.SerialPlayerJoinEvent;
+import io.github.anjoismysign.alternativesaving.event.SerialPlayerQuitEvent;
 import io.github.anjoismysign.blobeconomy.events.DepositorLoadEvent;
 import io.github.anjoismysign.bloblib.SoulAPI;
 import io.github.anjoismysign.bloblib.api.BlobLibInventoryAPI;
@@ -50,6 +52,8 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
         serialPlayerCruder = new BukkitCruderBuilder<SerialPlayer>()
                 .crudableClass(SerialPlayer.class)
                 .plugin(plugin)
+                .joinEvent(SerialPlayerJoinEvent::new)
+                .quitEvent(SerialPlayerQuitEvent::new)
                 .onJoin(serialPlayer -> {
                     @Nullable Player player = serialPlayer.getPlayer();
                     String identification = player == null ? serialPlayer.getIdentification() : player.getName();
