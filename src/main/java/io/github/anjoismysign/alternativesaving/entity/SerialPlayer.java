@@ -26,7 +26,7 @@ public final class SerialPlayer implements Crudable {
         this.profiles = new ArrayList<>();
         int defaultSlots = configuration.getDefaultSlots();
         for (int index = 0; index < defaultSlots; index++) {
-            this.profiles.add(new SerialProfile(configuration.getRandomProfileName(profiles.stream().map(profile->profile.getProfileName()).toList()),
+            this.profiles.add(new SerialProfile(UUID.randomUUID().toString(),configuration.getRandomProfileName(profiles.stream().map(SerialProfile::getProfileName).toList()),
                     "", false));
         }
     }

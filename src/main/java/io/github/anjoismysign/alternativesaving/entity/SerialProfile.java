@@ -6,10 +6,13 @@ public class SerialProfile {
     private final String profileName;
     protected String json;
     protected boolean hasPlayedBefore;
+    private final String identification;
 
-    public SerialProfile(@NotNull String profileName,
+    public SerialProfile(@NotNull String identification,
+                         @NotNull String profileName,
                          @NotNull String json,
                          boolean hasPlayedBefore){
+        this.identification = identification;
         this.profileName = profileName;
         this.json = json;
         this.hasPlayedBefore = hasPlayedBefore;
@@ -25,5 +28,9 @@ public class SerialProfile {
 
     public boolean hasPlayedBefore() {
         return hasPlayedBefore;
+    }
+
+    public String getIdentification() {
+        return identification;
     }
 }
