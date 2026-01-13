@@ -7,8 +7,10 @@ import io.github.anjoismysign.alternativesaving.configuration.WelcomePlayersConf
 import io.github.anjoismysign.alternativesaving.director.SavingManager;
 import io.github.anjoismysign.alternativesaving.director.SavingManagerDirector;
 import io.github.anjoismysign.alternativesaving.entity.SerialPlayer;
+import io.github.anjoismysign.alternativesaving.entity.SerialProfile;
 import io.github.anjoismysign.alternativesaving.event.SerialPlayerJoinEvent;
 import io.github.anjoismysign.alternativesaving.event.SerialPlayerQuitEvent;
+import io.github.anjoismysign.alternativesaving.event.SerialProfileLoadEvent;
 import io.github.anjoismysign.blobeconomy.events.DepositorLoadEvent;
 import io.github.anjoismysign.bloblib.SoulAPI;
 import io.github.anjoismysign.bloblib.api.BlobLibInventoryAPI;
@@ -55,18 +57,23 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
                 .joinEvent(SerialPlayerJoinEvent::new)
                 .quitEvent(SerialPlayerQuitEvent::new)
                 .onJoin(serialPlayer -> {
-                    @Nullable Player player = serialPlayer.getPlayer();
-                    String identification = player == null ? serialPlayer.getIdentification() : player.getName();
+                    SerialProfile profile = serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile());
+                    @Nullable Player joined = serialPlayer.getPlayer();
+                    if (joined == null){
+                        return;
+                    }
+                    String playerName = joined.getName();
                     Bukkit.getScheduler().runTask(plugin, () -> {
+                        if (!joined.isConnected()){
+                            return;
+                        }
+                        SerialProfileLoadEvent event = new SerialProfileLoadEvent(profile, joined);
+                        Bukkit.getPluginManager().callEvent(event);
                         SavingConfiguration savingConfiguration = ConfigurationManager.getConfiguration();
-                        @Nullable Player joined = serialPlayer.getPlayer();
-                        if (joined == null){
+                        if (profile.hasPlayedBefore()){
                             return;
                         }
-                        if (serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile()).hasPlayedBefore()){
-                            return;
-                        }
-                        AlternativeSaving.getInstance().info(identification+" isNewPlayer");
+                        AlternativeSaving.getInstance().info(playerName+" isNewPlayer");
                         WelcomePlayersConfiguration welcomePlayers = savingConfiguration.getWelcomePlayers();
                         if (welcomePlayers.isEnabled()) {
                             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
