@@ -10,7 +10,6 @@ import io.github.anjoismysign.alternativesaving.entity.SerialPlayer;
 import io.github.anjoismysign.alternativesaving.entity.SerialProfile;
 import io.github.anjoismysign.alternativesaving.event.SerialPlayerJoinEvent;
 import io.github.anjoismysign.alternativesaving.event.SerialPlayerQuitEvent;
-import io.github.anjoismysign.alternativesaving.event.SerialProfileLoadEvent;
 import io.github.anjoismysign.blobeconomy.events.DepositorLoadEvent;
 import io.github.anjoismysign.bloblib.SoulAPI;
 import io.github.anjoismysign.bloblib.api.BlobLibInventoryAPI;
@@ -30,6 +29,7 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 import java.util.Objects;
+import java.util.UUID;
 import java.util.concurrent.CompletableFuture;
 
 public class AlternativeSavingManager extends SavingManager implements Listener {
@@ -38,6 +38,11 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
     private final BukkitCruder<SerialPlayer> serialPlayerCruder;
 
     private static AlternativeSavingManager INSTANCE;
+
+    @Nullable
+    public static SerialPlayer getSerialPlayer(@NotNull UUID uuid){
+        return INSTANCE.serialPlayerCruder.isCrudable(uuid).orElse(null);
+    }
 
     @Nullable
     public static SerialPlayer getSerialPlayer(@NotNull Player player){
@@ -67,8 +72,6 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
                         if (!joined.isConnected()){
                             return;
                         }
-                        SerialProfileLoadEvent event = new SerialProfileLoadEvent(profile, joined);
-                        Bukkit.getPluginManager().callEvent(event);
                         SavingConfiguration savingConfiguration = ConfigurationManager.getConfiguration();
                         if (profile.hasPlayedBefore()){
                             return;
@@ -155,7 +158,7 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
                     return;
                 }
                 AlternativeSaving.getInstance().info(identification+" hasPlayedBefore");
-                serialPlayer.loadProfile(joined, serialPlayer.getSelectedProfile());
+                serialPlayer.loadProfile(joined, serialPlayer.getSelectedProfile(), false);
                 boolean translateOnJoin = savingConfiguration.isTranslateOnJoin();
                 if (translateOnJoin){
                     String locale = joined.getLocale();

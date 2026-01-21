@@ -3,6 +3,7 @@ package io.github.anjoismysign.alternativesaving.entity;
 import io.github.anjoismysign.alternativesaving.AlternativeSaving;
 import io.github.anjoismysign.alternativesaving.configuration.SavingConfiguration;
 import io.github.anjoismysign.alternativesaving.director.manager.ConfigurationManager;
+import io.github.anjoismysign.alternativesaving.event.SerialProfileLoadEvent;
 import io.github.anjoismysign.bloblib.api.BlobLibInventoryAPI;
 import io.github.anjoismysign.bloblib.entities.translatable.TranslatableItem;
 import io.github.anjoismysign.psa.crud.Crudable;
@@ -64,7 +65,8 @@ public final class SerialPlayer implements Crudable {
     }
 
     public void loadProfile(@NotNull Player player,
-                            int selectedProfile){
+                            int selectedProfile,
+                            boolean callLoadEvent){
         AlternativeSaving plugin = AlternativeSaving.getInstance();
         if (this.selectedProfile != selectedProfile) {
             saveCurrentProfile(player, true);
@@ -82,6 +84,10 @@ public final class SerialPlayer implements Crudable {
             PlayerProfile.fromJson(json).toPlayer(player);
         }
         this.selectedProfile = selectedProfile;
+        if (callLoadEvent){
+            SerialProfileLoadEvent event = new SerialProfileLoadEvent(this, profile, player);
+            Bukkit.getPluginManager().callEvent(event);
+        }
     }
 
     @Nullable
@@ -111,7 +117,7 @@ public final class SerialPlayer implements Crudable {
                             if (index == selectedProfile){
                                 return;
                             }
-                            loadProfile(target, index);
+                            loadProfile(target, index, true);
                         },
                         profile -> TranslatableItem.by("AlternativeSaving.Switch-Profile-Element")
                                 .localize(target)

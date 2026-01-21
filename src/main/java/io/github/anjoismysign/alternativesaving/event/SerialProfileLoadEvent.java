@@ -1,6 +1,7 @@
 
 package io.github.anjoismysign.alternativesaving.event;
 
+import io.github.anjoismysign.alternativesaving.entity.SerialPlayer;
 import io.github.anjoismysign.alternativesaving.entity.SerialProfile;
 import org.bukkit.entity.Player;
 import org.bukkit.event.Event;
@@ -8,14 +9,22 @@ import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
 public class SerialProfileLoadEvent extends Event {
-    private final Player player;
+    private final SerialPlayer serialPlayer;
     private final SerialProfile serialProfile;
+    private final Player player;
 
-    public SerialProfileLoadEvent(@NotNull SerialProfile serialProfile,
+    public SerialProfileLoadEvent(@NotNull SerialPlayer serialPlayer,
+                                  @NotNull SerialProfile serialProfile,
                                   @NotNull Player player){
         super(false);
+        this.serialPlayer = serialPlayer;
         this.serialProfile = serialProfile;
         this.player = player;
+    }
+
+    @NotNull
+    public SerialPlayer getSerialPlayer() {
+        return serialPlayer;
     }
 
     @NotNull
