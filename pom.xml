@@ -10,7 +10,7 @@
     <name>AlternativeSaving</name>
 
     <properties>
-        <minecraft.version>1.21.5</minecraft.version>
+        <minecraft.version>1.21.11</minecraft.version>
         <java.version>17</java.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
     </properties>

@@ -1,7 +1,7 @@
 name: AlternativeSaving
 version: ${project.version}
 main: io.github.anjoismysign.alternativesaving.AlternativeSaving
-api-version: 1.21
+api-version: 1.21.11
 load: POSTWORLD
 depend:
   - BlobLib
