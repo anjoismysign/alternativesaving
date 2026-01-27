@@ -8,6 +8,9 @@ import org.bukkit.event.Event;
 import org.bukkit.event.HandlerList;
 import org.jetbrains.annotations.NotNull;
 
+/**
+ * Called on main thread
+ */
 public class SerialProfileLoadEvent extends Event {
     private final SerialPlayer serialPlayer;
     private final SerialProfile serialProfile;

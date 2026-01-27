@@ -40,12 +40,12 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
     private static AlternativeSavingManager INSTANCE;
 
     @Nullable
-    public static SerialPlayer getSerialPlayer(@NotNull UUID uuid){
+    public static SerialPlayer getSerialPlayer(@NotNull UUID uuid) {
         return INSTANCE.serialPlayerCruder.isCrudable(uuid).orElse(null);
     }
 
     @Nullable
-    public static SerialPlayer getSerialPlayer(@NotNull Player player){
+    public static SerialPlayer getSerialPlayer(@NotNull Player player) {
         Objects.requireNonNull(player, "'player' cannot be null");
         return INSTANCE.serialPlayerCruder.lookFor(player);
     }
@@ -64,19 +64,19 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
                 .onJoin(serialPlayer -> {
                     SerialProfile profile = serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile());
                     @Nullable Player joined = serialPlayer.getPlayer();
-                    if (joined == null){
+                    if (joined == null) {
                         return;
                     }
                     String playerName = joined.getName();
                     Bukkit.getScheduler().runTask(plugin, () -> {
-                        if (!joined.isConnected()){
+                        if (!joined.isConnected()) {
                             return;
                         }
                         SavingConfiguration savingConfiguration = ConfigurationManager.getConfiguration();
-                        if (profile.hasPlayedBefore()){
+                        if (profile.hasPlayedBefore()) {
                             return;
                         }
-                        AlternativeSaving.getInstance().info(playerName+" isNewPlayer");
+                        AlternativeSaving.getInstance().info(playerName + " isNewPlayer");
                         WelcomePlayersConfiguration welcomePlayers = savingConfiguration.getWelcomePlayers();
                         if (welcomePlayers.isEnabled()) {
                             Bukkit.getOnlinePlayers().forEach(onlinePlayer -> {
@@ -95,7 +95,7 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
                             Objects.requireNonNull(carrier, "'" + reference + "' cannot be null");
                             MetaBlobPlayerInventoryBuilder.fromInventoryBuilderCarrier
                                     (carrier, joined.getUniqueId());
-                            if (inventoryConfiguration.isSoul()){
+                            if (inventoryConfiguration.isSoul()) {
                                 SoulAPI.getInstance().set(joined);
                             }
                         }
@@ -103,38 +103,40 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
                 })
                 .onAutoSave(serialPlayer -> {
                     @Nullable Player player = serialPlayer.getPlayer();
-                    if (player == null){
+                    if (player == null) {
                         return;
                     }
                     serialPlayer.saveCurrentProfile(player, serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile()).hasPlayedBefore());
                 })
                 .onQuit(serialPlayer -> {
                     @Nullable Player player = serialPlayer.getPlayer();
-                    if (player == null){
+                    if (player == null) {
                         return;
                     }
                     int selectedProfile = serialPlayer.getSelectedProfile();
-                    AlternativeSaving.getInstance().info(player.getName()+"'s selectedProfile: "+selectedProfile);
+                    AlternativeSaving.getInstance().info(player.getName() + "'s selectedProfile: " + selectedProfile);
                     serialPlayer.saveCurrentProfile(player, true);
                 })
                 .build();
     }
 
     @EventHandler
-    public void onLoad(DepositorLoadEvent event){
+    public void onLoad(DepositorLoadEvent event) {
         @Nullable Player joined = event.getDepositor().getPlayer();
-        if (joined == null){
+        if (joined == null) {
             return;
         }
         AlternativeSaving plugin = AlternativeSaving.getInstance();
         CompletableFuture<SerialPlayer> serialPlayerFuture = new CompletableFuture<>();
 
+        var scheduler = Bukkit.getScheduler();
+
         @Nullable SerialPlayer immediate = getSerialPlayer(joined);
         if (immediate != null) {
             serialPlayerFuture.complete(immediate);
         } else {
-            Bukkit.getScheduler().runTaskTimerAsynchronously(plugin, (task) -> {
-                if (!joined.isOnline()) {
+            scheduler.runTaskTimerAsynchronously(plugin, (task) -> {
+                if (!joined.isConnected()) {
                     task.cancel();
                     return;
                 }
@@ -148,25 +150,25 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
         }
 
         serialPlayerFuture.thenAccept(serialPlayer -> {
-            Bukkit.getScheduler().runTask(plugin, () -> {
+            scheduler.runTask(plugin, () -> {
                 if (!joined.isConnected()) {
                     return;
                 }
                 String identification = joined.getName();
                 SavingConfiguration savingConfiguration = ConfigurationManager.getConfiguration();
-                if (!serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile()).hasPlayedBefore()){
+                if (!serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile()).hasPlayedBefore()) {
                     return;
                 }
-                AlternativeSaving.getInstance().info(identification+" hasPlayedBefore");
+                AlternativeSaving.getInstance().info(identification + " hasPlayedBefore");
                 serialPlayer.loadProfile(joined, serialPlayer.getSelectedProfile(), false);
                 boolean translateOnJoin = savingConfiguration.isTranslateOnJoin();
-                if (translateOnJoin){
+                if (translateOnJoin) {
                     String locale = joined.getLocale();
                     for (ItemStack stack : joined.getInventory().getContents()) {
                         TranslatableItem.localize(stack, locale);
                     }
                     Bukkit.getScheduler().runTaskLater(getPlugin(), () -> {
-                        if (!joined.isConnected()){
+                        if (!joined.isConnected()) {
                             return;
                         }
                         joined.updateInventory();
@@ -179,7 +181,7 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
     @Override
     public void reload() {
         SavingConfiguration configuration = ConfigurationManager.getConfiguration();
-        if (configuration.getDefaultSlots() < 1){
+        if (configuration.getDefaultSlots() < 1) {
             throw new RuntimeException("config.yml 'defaultSlots' cannot be less than one");
         }
     }
