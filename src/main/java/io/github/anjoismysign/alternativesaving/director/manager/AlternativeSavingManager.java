@@ -188,6 +188,16 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
 
     @Override
     public void unload() {
+        serialPlayerCruder.getAll().forEach(serialPlayer -> {
+            @Nullable Player player = serialPlayer.getPlayer();
+            if (player == null) {
+                return;
+            }
+            int selectedProfile = serialPlayer.getSelectedProfile();
+            AlternativeSaving.getInstance().info(player.getName() + "'s selectedProfile: " + selectedProfile);
+            serialPlayer.saveCurrentProfile(player, true);
+        });
         serialPlayerCruder.saveAll();
+        getPlugin().getLogger().info("unloaded");
     }
 }
