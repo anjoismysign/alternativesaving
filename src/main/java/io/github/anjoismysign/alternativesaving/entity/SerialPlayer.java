@@ -79,6 +79,10 @@ public final class SerialPlayer implements Crudable {
         String json = profile.json;
         if (json == null || json.isEmpty()){
             plugin.info("empty json");
+            //if player already has stuff in their profile, it currently copies it to the new profile
+            //this is undesirable since the idea of loading a new profile is of having fresh data
+            //instead, let's use a default profile
+            ConfigurationManager.getConfiguration().getDefaultProgress().toPlayerProfile().toPlayer(player);
             profile.json = PlayerProfile.fromPlayer(player, false).toJson();
         } else {
             PlayerProfile.fromJson(json).toPlayer(player);

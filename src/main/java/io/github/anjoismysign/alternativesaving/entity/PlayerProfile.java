@@ -13,6 +13,7 @@ import org.bukkit.attribute.Attribute;
 import org.bukkit.attribute.AttributeInstance;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.PlayerInventory;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.Map;
@@ -38,8 +39,8 @@ public record PlayerProfile(
         @NotNull String getArmor,
         int getHeldItemSlot,
         boolean hasPlayedBefore,
-        @NotNull Map<String, Double> wallet,
-        @NotNull Map<String, Double> bank
+        @NotNull Map<String, Double> getWallet,
+        @NotNull Map<String, Double> getBank
 ) {
 
     public static PlayerProfile fromPlayer(@NotNull Player player,
@@ -115,30 +116,41 @@ public record PlayerProfile(
         player.setFlying(this.getFlying);
         player.setGameMode(this.getGameMode);
 
-        String[] parts = this.getLocation.split(",");
-        if (parts.length == 6) {
-            World world = Bukkit.getWorld(parts[0]);
-            try {
-                double x = Double.parseDouble(parts[1]);
-                double y = Double.parseDouble(parts[2]);
-                double z = Double.parseDouble(parts[3]);
-                float yaw = Float.parseFloat(parts[4]);
-                float pitch = Float.parseFloat(parts[5]);
-                if (world != null) {
-                    player.teleport(new Location(world, x, y, z, yaw, pitch));
+        if (!getLocation.isEmpty()) {
+            String[] parts = this.getLocation.split(",");
+            if (parts.length == 6) {
+                World world = Bukkit.getWorld(parts[0]);
+                try {
+                    double x = Double.parseDouble(parts[1]);
+                    double y = Double.parseDouble(parts[2]);
+                    double z = Double.parseDouble(parts[3]);
+                    float yaw = Float.parseFloat(parts[4]);
+                    float pitch = Float.parseFloat(parts[5]);
+                    if (world != null) {
+                        player.teleport(new Location(world, x, y, z, yaw, pitch));
+                    }
+                } catch (NumberFormatException ignored) {
                 }
-            } catch (NumberFormatException ignored) {
             }
         }
 
-        ItemStack[] contents = ItemStackUtil.itemStackArrayFromBase64(this.getInventory);
-        ItemStack[] armor = ItemStackUtil.itemStackArrayFromBase64(this.getArmor);
-        player.getInventory().setContents(contents);
-        player.getInventory().setArmorContents(armor);
+        PlayerInventory playerInventory = player.getInventory();
+        if (!getInventory.isEmpty()) {
+            ItemStack[] contents = ItemStackUtil.itemStackArrayFromBase64(this.getInventory);
+            playerInventory.setContents(contents);
+        }
+        if(!getArmor.isEmpty()) {
+            ItemStack[] armor = ItemStackUtil.itemStackArrayFromBase64(this.getArmor);
+            player.getInventory().setArmorContents(armor);
+        }
+        if (getInventory.isEmpty() && getArmor.isEmpty()){
+            playerInventory.clear();
+        }
+
         player.getInventory().setHeldItemSlot(this.getHeldItemSlot);
 
-        economy.applyWallet(player, wallet);
-        economy.applyBank(player, bank);
+        economy.applyWallet(player, getWallet);
+        economy.applyBank(player, getBank);
 
     }
 

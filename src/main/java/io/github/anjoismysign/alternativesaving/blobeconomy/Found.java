@@ -17,10 +17,19 @@ public class Found implements BlobEconomy{
 
     public void applyWallet(@NotNull Player player,
                             @Nullable Map<String,Double> map){
-        if (map == null){
+        ElasticEconomy elasticEconomy = BlobLibEconomyAPI.getInstance().getElasticEconomy();
+        if (map == null || map.isEmpty()){
+            economyAPI.getAllCurrencies().forEach(currency -> {
+                String key = currency.getKey();
+                if (!elasticEconomy.existsImplementation(key)){
+                    return;
+                }
+                IdentityEconomy identityEconomy = elasticEconomy.getImplementation(key);
+                double current = identityEconomy.getBalance(player);
+                identityEconomy.withdrawPlayer(player, current);
+            });
             return;
         }
-        ElasticEconomy elasticEconomy = BlobLibEconomyAPI.getInstance().getElasticEconomy();
         map.forEach((currency, amount)->{
             if (!elasticEconomy.existsImplementation(currency)){
                 return;
@@ -34,7 +43,9 @@ public class Found implements BlobEconomy{
 
     public void applyBank(@NotNull Player player,
                           @Nullable Map<String,Double> map){
-        if (map == null){
+        if (map == null || map.isEmpty()){
+            Wallet wallet = economyAPI.getBankWallet(player);
+            wallet.clear();
             return;
         }
         Wallet wallet = economyAPI.getBankWallet(player);

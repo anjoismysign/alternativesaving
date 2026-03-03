@@ -16,3 +16,24 @@ welcomePlayers:
     enabled: false
     # If inventory should be treated as soul, which means that it's not lost on death
     soul: false
+defaultProgress:
+  health: 20.0
+  maxHealth: 20.0
+  foodLevel: 20
+  saturation: 5.0
+  exhaustion: 0.0
+  level: 0
+  exp: 0.0
+  totalExperience: 0
+  fallDistance: 0.0
+  fireTicks: 0
+  remainingAir: 300
+  maximumAir: 300
+  allowFlight: false
+  flying: false
+  gameMode: SURVIVAL
+  heldItemSlot: 0
+  playedBefore: false
+  # Economy maps (Currency Name: Amount)
+  wallet: {}
+  bank: {}

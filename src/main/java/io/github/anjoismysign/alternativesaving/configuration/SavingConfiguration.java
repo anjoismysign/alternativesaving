@@ -1,5 +1,6 @@
 package io.github.anjoismysign.alternativesaving.configuration;
 
+import io.github.anjoismysign.alternativesaving.entity.PlayerProfileBean;
 import org.jetbrains.annotations.NotNull;
 
 import java.util.List;
@@ -15,6 +16,8 @@ public class SavingConfiguration {
     private int defaultSlots;
 
     private boolean translateOnJoin;
+
+    private PlayerProfileBean defaultProgress;
 
     SavingConfiguration(){}
 
@@ -74,5 +77,13 @@ public class SavingConfiguration {
 
     public void setTranslateOnJoin(boolean translateOnJoin) {
         this.translateOnJoin = translateOnJoin;
+    }
+
+    public PlayerProfileBean getDefaultProgress() {
+        return defaultProgress;
+    }
+
+    public void setDefaultProgress(PlayerProfileBean defaultProgress) {
+        this.defaultProgress = defaultProgress;
     }
 }
