@@ -1,9 +1,9 @@
 package io.github.anjoismysign.alternativesaving.director;
 
-import io.github.anjoismysign.alternativesaving.director.manager.AlternativeSavingManager;
-import io.github.anjoismysign.bloblib.entities.GenericManagerDirector;
 import io.github.anjoismysign.alternativesaving.AlternativeSaving;
+import io.github.anjoismysign.alternativesaving.director.manager.AlternativeSavingManager;
 import io.github.anjoismysign.alternativesaving.director.manager.ConfigurationManager;
+import io.github.anjoismysign.bloblib.entities.GenericManagerDirector;
 import org.jetbrains.annotations.NotNull;
 
 public class SavingManagerDirector extends GenericManagerDirector<AlternativeSaving> {

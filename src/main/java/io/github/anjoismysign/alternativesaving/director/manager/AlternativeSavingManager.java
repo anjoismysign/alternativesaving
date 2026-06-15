@@ -157,6 +157,8 @@ public class AlternativeSavingManager extends SavingManager implements Listener 
                 String identification = joined.getName();
                 SavingConfiguration savingConfiguration = ConfigurationManager.getConfiguration();
                 if (!serialPlayer.getProfiles().get(serialPlayer.getSelectedProfile()).hasPlayedBefore()) {
+                    AlternativeSaving.getInstance().info(identification + " !hasPlayedBefore");
+                    ConfigurationManager.getConfiguration().getDefaultProgress().toPlayerProfile().toPlayer(joined);
                     return;
                 }
                 AlternativeSaving.getInstance().info(identification + " hasPlayedBefore");
