@@ -7,7 +7,6 @@ import io.github.anjoismysign.alternativesaving.director.manager.ConfigurationMa
 import io.github.anjoismysign.alternativesaving.profile.AlternativeSavingProfile;
 import io.github.anjoismysign.bloblib.managers.BlobPlugin;
 import io.github.anjoismysign.bloblib.managers.IManagerDirector;
-import net.milkbowl.vault.profile.wrappers.ProfileWrapper;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 
@@ -29,7 +28,7 @@ public final class AlternativeSaving extends BlobPlugin {
         proxy = director.proxy();
         AlternativeSavingCommand.INSTANCE.load();
         if (Bukkit.getPluginManager().getPlugin("Vault") != null) {
-            new ProfileWrapper(new AlternativeSavingProfile()).registerProviders();
+            AlternativeSavingProfile.load();
         }
     }
 

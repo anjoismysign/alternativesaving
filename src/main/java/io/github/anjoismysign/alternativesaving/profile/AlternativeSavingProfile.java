@@ -4,6 +4,7 @@ import io.github.anjoismysign.alternativesaving.director.manager.AlternativeSavi
 import io.github.anjoismysign.alternativesaving.entity.SerialPlayer;
 import io.github.anjoismysign.alternativesaving.entity.SerialProfile;
 import net.milkbowl.vault.profile.Profile;
+import net.milkbowl.vault.profile.wrappers.ProfileWrapper;
 import org.bukkit.Bukkit;
 import org.bukkit.OfflinePlayer;
 import org.bukkit.entity.Player;
@@ -11,6 +12,10 @@ import org.jetbrains.annotations.NotNull;
 import org.jetbrains.annotations.Nullable;
 
 public class AlternativeSavingProfile implements Profile {
+
+    public static void load(){
+        new ProfileWrapper(new AlternativeSavingProfile()).registerProviders();
+    }
 
     @Override
     public boolean isEnabled() {
