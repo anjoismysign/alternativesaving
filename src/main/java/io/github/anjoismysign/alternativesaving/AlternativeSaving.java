@@ -5,8 +5,8 @@ import io.github.anjoismysign.alternativesaving.configuration.SavingConfiguratio
 import io.github.anjoismysign.alternativesaving.director.SavingManagerDirector;
 import io.github.anjoismysign.alternativesaving.director.manager.ConfigurationManager;
 import io.github.anjoismysign.alternativesaving.profile.AlternativeSavingProfile;
-import io.github.anjoismysign.bloblib.managers.BlobPlugin;
-import io.github.anjoismysign.bloblib.managers.IManagerDirector;
+import io.github.anjoismysign.bloblib.manager.BlobPlugin;
+import io.github.anjoismysign.bloblib.manager.IManagerDirector;
 import org.bukkit.Bukkit;
 import org.jetbrains.annotations.NotNull;
 

@@ -4,7 +4,7 @@ import com.google.gson.Gson;
 import io.github.anjoismysign.alternativesaving.blobeconomy.BlobEconomy;
 import io.github.anjoismysign.alternativesaving.blobeconomy.Found;
 import io.github.anjoismysign.alternativesaving.blobeconomy.NotFound;
-import io.github.anjoismysign.bloblib.utilities.ItemStackUtil;
+import io.github.anjoismysign.bloblib.utility.ItemStackUtil;
 import org.bukkit.Bukkit;
 import org.bukkit.GameMode;
 import org.bukkit.Location;

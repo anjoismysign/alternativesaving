@@ -5,7 +5,7 @@ import io.github.anjoismysign.alternativesaving.configuration.SavingConfiguratio
 import io.github.anjoismysign.alternativesaving.director.manager.ConfigurationManager;
 import io.github.anjoismysign.alternativesaving.event.SerialProfileLoadEvent;
 import io.github.anjoismysign.bloblib.api.BlobLibInventoryAPI;
-import io.github.anjoismysign.bloblib.entities.translatable.TranslatableItem;
+import io.github.anjoismysign.bloblib.translatable.TranslatableItem;
 import io.github.anjoismysign.psa.crud.Crudable;
 import org.bukkit.Bukkit;
 import org.bukkit.entity.Player;
