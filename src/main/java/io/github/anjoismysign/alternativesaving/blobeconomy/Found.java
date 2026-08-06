@@ -11,6 +11,7 @@ import org.jetbrains.annotations.Nullable;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.Objects;
 
 public class Found implements BlobEconomy{
     private final BlobEconomyAPI economyAPI = BlobEconomyAPI.getInstance();
@@ -55,15 +56,7 @@ public class Found implements BlobEconomy{
 
     @Override
     public @NotNull Map<String, Double> wallet(@NotNull Player player) {
-        ElasticEconomy elasticEconomy = BlobLibEconomyAPI.getInstance().getElasticEconomy();
-        Map<String,Double> map = new HashMap<>();
-        economyAPI.getAllCurrencies().forEach(currency -> {
-            String key = currency.getKey();
-            IdentityEconomy economy = elasticEconomy.getImplementation(key);
-            double amount = economy.getBalance(player);
-            map.put(key, amount);
-        });
-        return map;
+        return new HashMap<>(Objects.requireNonNull(economyAPI.getDepositor(player), "Player cannot be null!").getWallet());
     }
 
     @Override
