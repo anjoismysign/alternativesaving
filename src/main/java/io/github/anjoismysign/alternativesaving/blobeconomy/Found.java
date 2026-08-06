@@ -2,7 +2,7 @@ package io.github.anjoismysign.alternativesaving.blobeconomy;
 
 import io.github.anjoismysign.blobeconomy.BlobEconomyAPI;
 import io.github.anjoismysign.bloblib.api.BlobLibEconomyAPI;
-import io.github.anjoismysign.bloblib.entities.currency.Wallet;
+import io.github.anjoismysign.bloblib.currency.Wallet;
 import io.github.anjoismysign.bloblib.vault.multieconomy.ElasticEconomy;
 import net.milkbowl.vault.economy.IdentityEconomy;
 import org.bukkit.entity.Player;
