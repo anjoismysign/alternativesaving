@@ -1,4 +1,3 @@
 AlternativeSaving:
   Added-Profile:
-    Type: CHAT
-    Message: '&7Added &e%profileName% &7to &e%player%'
+    Chat: '&7Added &e%profileName% &7to &e%player%'
